@@ -3,14 +3,14 @@
 /**
  * @copyright   Copyright (C) 2019-2020 Jeffrey Bostoen
  * @license     https://www.gnu.org/licenses/gpl-3.0.en.html
- * @version     2020-01-27 19:00:07
+ * @version     2020-11-02 19:47:32
  *
  * iTop module definition file
  */
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'jb-crab/2.6.200127',
+	'jb-crab/2.6.201102',
 	array(
 		// Identification
 		//
@@ -20,6 +20,7 @@ SetupWebPage::AddModule(
 		// Setup
 		//
 		'dependencies' => array(
+			'jb-framework/2.6.0',
 			'jb-map-main/2.6.0'
 		),
 		'mandatory' => false,
@@ -29,8 +30,8 @@ SetupWebPage::AddModule(
 		//
 		'datamodel' => array(
 			'model.jb-crab.php',
-			'core/CrabImportHandler.class.inc.php',
-			'core/ScheduledProcessCrab.class.inc.php',
+			'app/common/crabimporthelper.class.inc.php',
+			'app/core/backgroundprocess.class.inc.php',
 		),
 		'webservice' => array(
 			
@@ -51,9 +52,10 @@ SetupWebPage::AddModule(
 		//
 		'settings' => array(
 			// Module specific settings go here, if any
-			'time' => '16:14',
+			'time' => '00:30',
 			'enabled' => true,
-			'debug' => false
+			'debug' => 'error',
+			'shapefile_query' => 'SELECT * FROM CrabAdr WHERE GEMEENTE = "Izegem" ORDER BY STRAATNM',
 		),
 	)
 );

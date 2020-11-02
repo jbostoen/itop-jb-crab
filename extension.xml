@@ -4,9 +4,9 @@
 	<company></company>
 	<author><![CDATA[jbostoen]]></author>
 	<label><![CDATA[Flemish Crab Addresses]]></label>
-	<description><![CDATA[Adds 2 classes for Flemish Crab Addresses.  See read me of this extension.]]></description>
-	<version>2.6.200127</version>
-	<release_date>2020-01-27</release_date>
+	<description><![CDATA[Adds classes for Flemish Crab Addresses. Also adds a scheduled process.]]></description>
+	<version>2.6.201102</version>
+	<release_date>2020-11-02</release_date>
 	<version_description><![CDATA[ ]]></version_description>
 	<itop_version_min>2.6.0</itop_version_min>
 	<status>stable</status>
