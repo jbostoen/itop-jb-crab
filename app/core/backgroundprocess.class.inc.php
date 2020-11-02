@@ -62,7 +62,7 @@ class ScheduledProcessCrabSync extends ScheduledProcess implements iScheduledPro
 			$sQuery = utils::GetCurrentModuleSetting('shapefile_query', ''); // Example: 'SELECT * FROM CrabAdr WHERE GEMEENTE = "Izegem" ORDER BY STRAATNM'
 			
 			CrabImportHelper::Init();
-			// CrabImportHelper::DownloadShapeFile($this);
+			CrabImportHelper::DownloadShapeFile($this);
 			CrabImportHelper::ConvertShapeFileToGeoJSON($this, $sQuery);
 			CrabImportHelper::ImportFromGeoJSON($this);			
 			
