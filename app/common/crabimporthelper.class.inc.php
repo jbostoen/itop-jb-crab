@@ -3,7 +3,7 @@
 /**
  * @copyright   Copyright (C) 2019-2020 Jeffrey Bostoen
  * @license     https://www.gnu.org/licenses/gpl-3.0.en.html
- * @version     2020-11-02 19:47:32
+ * @version     2020-11-04 15:45:48
  *
  * Definition of Address
  */
@@ -103,6 +103,11 @@ abstract class CrabImportHelper {
 		curl_exec($ch);
 		curl_close($ch);
 		
+		$sErrorCode = curl_getinfo($ch, CURLINFO_HEADER_OUT);
+		$sHttpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		
+		$oProcess->Trace('cURL - error code: '.$sErrorCode.' - HTTP code: '.$sHttpCode);
+		
 		if(class_exists('ZipArchive') == false) {
 			$oProcess->Trace('Error: missing php-zip?');
 			throw new Exception('Error: missing php-zip?');
@@ -113,7 +118,7 @@ abstract class CrabImportHelper {
 		$zip = new ZipArchive;
 		$res = $zip->open($sTargetFileName);
 		
-		if ($res === true) {
+		if($res === true) {
 			
 			$zip->extractTo(self::$sDownloadDirectory);
 			$zip->close();
@@ -121,8 +126,8 @@ abstract class CrabImportHelper {
 		} 
 		else {
 			// Fail
-			$oProcess->Trace('Unable to unzip file to directory '.self::$sDownloadDirectory);
-			throw new Exception('Unable to unzip file to directory '.self::$sDownloadDirectory);
+			$oProcess->Trace('Unable to unzip file to directory '.self::$sDownloadDirectory.'. Possible reasons: permissions, corrupt file, ...', 'error');
+			throw new Exception('Unable to unzip file to directory '.self::$sDownloadDirectory.' Possible reasons: permissions, corrupt file, ...');
 		}
 		
 	}
@@ -172,8 +177,9 @@ abstract class CrabImportHelper {
 
 		// Check if everything went well
 		if(file_exists($sFileName_GeoJSON) == false) {
-			$oProcess->Trace('Error: unable to convert shapefile to GeoJSON. Is ogr2ogr known to the current Apache user?');
-			throw new Exception('Error: unable to convert shapefile to GeoJSON. Is ogr2ogr known to the current Apache user?');
+			$sCurrentUser = exec('whoami');
+			$oProcess->Trace('Error: unable to convert shapefile to GeoJSON. Is ogr2ogr known to the current Apache user ('.$sCurrentUser.')?');
+			throw new Exception('Error: unable to convert shapefile to GeoJSON. Is ogr2ogr known to the current Apache user ('.$sCurrentUser.')?');
 		}
 		
 		return;
@@ -253,7 +259,7 @@ abstract class CrabImportHelper {
 			// Some values are set manually.
 			// Geometry comes from the geometry of the GeoJSON, not from properties.
 			// In list? Let's assume it's in use 
-			$v['properties']['STATUS'] = self::aCrab_Status['in_use'];
+			$v['properties']['STATUS'] = self::$aCrab_Status['in_use'];
 			$v['properties']['GEOM'] = 'POINT('. implode(' ', $v['geometry']['coordinates']) .')';
 
 			if($iAddress == 1) {
@@ -279,7 +285,7 @@ abstract class CrabImportHelper {
 			$oStreet->Set('name', $v['properties']['STRAATNM']);
 			$oStreet->Set('crab_id', $v['properties']['STRAATNMID']);
 			$oStreet->Set('city_id', $aCities_name[$sCityName]->GetKey());
-			$oStreet->Set('status', self::aCrab_Status['in_use']);
+			$oStreet->Set('status', self::$aCrab_Status['in_use']);
 			
 			$aDebugInfo = [];
 			$oAddress = new CrabAddress();
@@ -289,9 +295,6 @@ abstract class CrabImportHelper {
 				$aDebugInfo[] = $sValue;
 			}
 			
-			// Must fix: street_id is currently the crab_id; but it has to be translated into the iTop internal ID
-			$oAddress->Set('street_id', $aStreets_crab_id['crab_id::'.$oAddress->Get('street_id')]->GetKey());
-		
 			$oProcess->Trace('Processing GeoJSON Feature '.sprintf('%08d', $iAddress ).' | '.implode(' | ', $aDebugInfo));
 			
 			// Street exists in array? (crab_id is unique)
@@ -309,6 +312,10 @@ abstract class CrabImportHelper {
 			}
 			
 			// Crab address exists in array?
+			
+			// Must fix: street_id is currently the crab_id; but it has to be translated into the iTop internal ID
+			$oAddress->Set('street_id', $aStreets_crab_id['crab_id::'.$oAddress->Get('street_id')]->GetKey());
+			
 				
 			// Exists in iTop? 
 			if(array_key_exists('crab_id::'.$oAddress->Get('crab_id'), $aAddresses_crab_id) == false) {
@@ -358,9 +365,9 @@ abstract class CrabImportHelper {
 		foreach($aAddresses_crab_id as $sCrabId => $oAddress) {
 				
 			// Update required?
-			if($oAddress->Get('status') != self::aCrab_Status['not_found'] ) {
+			if($oAddress->Get('status') != self::$aCrab_Status['not_found'] ) {
 						
-				$oAddress->Set('status', self::aCrab_Status['not_found']);
+				$oAddress->Set('status', self::$aCrab_Status['not_found']);
 				$oAddress->DBUpdate();
 				
 			}

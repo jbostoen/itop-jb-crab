@@ -3,14 +3,14 @@
 /**
  * @copyright   Copyright (C) 2019-2020 Jeffrey Bostoen
  * @license     https://www.gnu.org/licenses/gpl-3.0.en.html
- * @version     2020-11-02 19:47:32
+ * @version     2020-11-04 15:45:48
  *
  * iTop module definition file
  */
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'jb-crab/2.6.201102',
+	'jb-crab/2.6.201104',
 	array(
 		// Identification
 		//
@@ -55,7 +55,7 @@ SetupWebPage::AddModule(
 			'time' => '00:30',
 			'enabled' => true,
 			'debug' => 'error',
-			'shapefile_query' => 'SELECT * FROM CrabAdr WHERE GEMEENTE = "Izegem" ORDER BY STRAATNM',
+			'shapefile_query' => 'SELECT * FROM CrabAdr WHERE GEMEENTE = \'Izegem\' ORDER BY STRAATNM', // Must be single quotes within this query!
 		),
 	)
 );
