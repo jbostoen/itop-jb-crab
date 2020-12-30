@@ -101,10 +101,10 @@ abstract class CrabImportHelper {
 		curl_setopt($ch, CURLOPT_NOPROGRESS, false);
 		curl_setopt($ch, CURLOPT_FILE, $sDownloadFile);
 		curl_exec($ch);
-		curl_close($ch);
 		
 		$sErrorCode = curl_getinfo($ch, CURLINFO_HEADER_OUT);
 		$sHttpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		curl_close($ch);
 		
 		$oProcess->Trace('cURL - error code: '.$sErrorCode.' - HTTP code: '.$sHttpCode);
 		
