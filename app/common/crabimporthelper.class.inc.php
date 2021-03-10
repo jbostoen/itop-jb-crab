@@ -178,8 +178,8 @@ abstract class CrabImportHelper {
 		// Check if everything went well
 		if(file_exists($sFileName_GeoJSON) == false) {
 			$sCurrentUser = exec('whoami');
-			$oProcess->Trace('Error: unable to convert shapefile to GeoJSON. Is ogr2ogr known to the current Apache user ('.$sCurrentUser.')?');
-			throw new Exception('Error: unable to convert shapefile to GeoJSON. Is ogr2ogr known to the current Apache user ('.$sCurrentUser.')?');
+			$oProcess->Trace('Error: unable to convert shapefile to GeoJSON. Is ogr2ogr (apt install gdal-bin) known to the current Apache user ('.$sCurrentUser.')?');
+			throw new Exception('Error: unable to convert shapefile to GeoJSON. Is ogr2ogr (apt install gdal-bin) known to the current Apache user ('.$sCurrentUser.')?');
 		}
 		
 		return;

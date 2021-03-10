@@ -27,7 +27,7 @@ There's also a scheduled process to import that data into iTop, so you can link 
   * [jb-map](https://github.com/jbostoen/itop-jb-pro-extensions) Map extension
   
 * OGR2OGR
-  * In Linux environments: install ogr2ogr
+  * In Linux environments: install ogr2ogr (apt install gdal-bin)
   * In Windows environments: add the folder where ogr2ogr.exe is located to the system environment variable named 'path'
 
 * needs write permissions: env-production/jb-crab/app/common/download . The data set will be downloaded here.
